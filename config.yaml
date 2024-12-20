@@ -1,0 +1,54 @@
+deployment:
+  storage:
+    type: "s3"
+    name: "test-freevolution.me"
+  metadb:
+    type: "dynamodb"
+    dbname: "dynamodb"
+    name: "FileSyncMetadata"
+# Logging and Monitoring Configuration
+logging:
+  level: "INFO"               # Supported values: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "json"              # e.g., "json", "text"
+  output: "stdout"            # e.g., "stdout", "file", "syslog"
+  # Additional logging parameters (if needed)
+  # file_path: "/var/log/myapp.log"
+  # If integrating with CloudWatch or another monitoring tool
+
+# Description: This file contains the configuration for the cache control module.
+# The default settings are applied to all the files, and the rules are applied to the files that match the mimetype.
+# The age is calculated based on the item and max values. 
+# The item value time since last modified date, and the max value is the maximum time that the file is cached.
+# d = day, w = week, m = month, y = year
+# The cache control will be set based on the settings value. if the item older then item then max-age will be set to max value.
+cache_control:
+  default:
+    max-age: 3600
+    settings: "public,must-revalidate"
+  rules:
+    - mimetype: ["text/html", "text/css", "application/javascript"]
+      settings: "public,must-revalidate"
+      age:
+        - item: 1w
+          max: 1d
+        - item: 1m
+          max: 1w
+        - item: 1y
+          max: 1m
+    - mimetype: ["image/*", "video/*", "audio/*"]
+      settings: "public,must-revalidate"
+      age:
+        - item: 1w
+          max: 1d
+        - item: 1m
+          max: 1w
+        - item: 1y
+          max: 1m
+
+# Synchronization Settings
+sync:
+  root_path: "/workspaces/bloblog/public"
+  exclude_patterns:
+    - r"tmp"
+
+workers: 20

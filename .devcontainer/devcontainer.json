@@ -1,0 +1,17 @@
+{
+    "name": "bloblog Dev Container",
+    "dockerFile": "../Dockerfile",
+    "context": "..",
+    "forwardPorts": [],
+    "remoteUser": "root",
+    "postCreateCommand": "apt update && apt install -y pipx && pipx install poetry && pipx ensurepath",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "GitHub.copilot",
+                "GitHub.copilot-chat",
+                "ms-python.python"
+            ]
+        }
+    }
+}
