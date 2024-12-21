@@ -46,3 +46,10 @@ class MetadataClient(ABC):
         :return: A list of FileMetadata objects.
         """
         pass
+
+    @abstractmethod
+    def delete(self, item: FileMetadata) -> None:
+        """
+        Delete file metadata by its item.
+        """
+        pass

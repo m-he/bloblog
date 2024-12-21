@@ -46,7 +46,7 @@ class DynamoDBClient(MetadataClient):
         except botocore.exceptions.ClientError as e:
             # Handle the error appropriately
             raise e
-
+    
     def get_file_metadata(self, relative_path: str) -> Optional[FileMetadata]:
         """See base class docstring."""
         try:
@@ -73,4 +73,11 @@ class DynamoDBClient(MetadataClient):
             return [FileMetadata(**item) for item in items]
         except botocore.exceptions.ClientError as e:
             # Handle the error appropriately
+            raise e
+
+    def delete(self, item: FileMetadata) -> None:
+        """See base class docstring."""
+        try:
+            self.table.delete_item(Key={'uuid': item.uuid})
+        except botocore.exceptions.ClientError as e:
             raise e

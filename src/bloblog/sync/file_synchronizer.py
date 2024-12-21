@@ -134,6 +134,7 @@ class FileSynchronizer:
         local_sha256 = self._calculate_sha256(file_path)
         if local_sha256 != file_metadata.sha256:
             file_metadata.upload_status = 'upload_pending'
+            file_metadata.last_modified = datetime.fromtimestamp(os.path.getmtime(file_path)).strftime("%Y-%m-%dT%H:%M:%S")
             file_metadata = self.config_manager.cache_control(file_metadata)
             self.task_queue.enqueue(file_metadata)
         else:
