@@ -73,6 +73,16 @@ class FileSynchronizer:
             record.upload_status = 'delete_pending'
             self.metadata_client.update(record)
 
+    def _delete_pending_files(self) -> None:
+        """
+        Delete all files with upload_status 'delete_pending'.
+        """
+        records = self.metadata_client.fetch_all_records()
+        for record in records:
+            if record.upload_status == 'delete_pending':
+                self.s3_client.delete_file(record)
+                self.metadata_client.delete(record)
+
     def walk_files(self) -> None:
         """
         Enumerate local files in the sync root and identify which need actions.
@@ -145,6 +155,7 @@ class FileSynchronizer:
             else:
                 file_metadata.upload_status = 'uploaded'
                 self.task_queue.enqueue(file_metadata)
+    
     def _calculate_sha256(self, file_path: str) -> str:
         """
         Calculate the SHA-256 hash of the file.
